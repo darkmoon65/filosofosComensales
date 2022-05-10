@@ -10,6 +10,7 @@ int variableComida = 5000;
 int vecesRestaurarComida = 2;
 pthread_mutex_t tenedores[];
 int estomagos[];
+int derrocheEnergia = 0;
 
 int main(void){ 
 	printf("Ingrese la cantidad de filosofos: ");
@@ -44,6 +45,8 @@ void dejarTenedores(int p1,int p2){
 
 void pensar(int num){
 	printf("Filosofo %d esta pensando \n", num );
+	estomagos[num] -= 10;
+	derrocheEnergia += 10;
 	int random = rand() % 10;  // generamos un numero random para dormir al thread
 	sleep(random);
 }
