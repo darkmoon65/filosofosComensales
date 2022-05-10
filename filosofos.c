@@ -9,7 +9,7 @@ int cantidadFilosofos;
 int variableComida = 5000;
 int vecesRestaurarComida = 2;
 pthread_mutex_t tenedores[];
-
+int estomagos[];
 
 int main(void){ 
 	printf("Ingrese la cantidad de filosofos: ");
@@ -54,11 +54,15 @@ void comer(int arg){
 	agarrarTenedor(arg, tenedor2);
 
 	printf("Filosofo %d esta comiendo \n",arg);
+	variableComida = variableComida-100;
+	estomagos[arg] += 100;
 
 	if(variableComida == 0 && vecesRestaurarComida > 0){
 		variableComida = 5000;
 		printf("-----------------Se restauro la comida --------------\n");
 	}
+
+	printf("Estomago de filosofo %d  esta con %d \n",arg, estomagos[arg]);
 	printf("Comida restante: %d\n",variableComida);
 	dejarTenedores(tenedor1, tenedor2);
 	
