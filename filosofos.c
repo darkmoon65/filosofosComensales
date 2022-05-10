@@ -5,23 +5,25 @@
 
 void *filosofo (void *arg);
 
-pthread_mutex_t tenedores[5];
+int cantidadFilosofos;
+pthread_mutex_t tenedores[];
 
 
 int main(void){ 
-
-	pthread_t filosofos[5];
+	printf("Ingrese la cantidad de filosofos: ");
+	scanf("%d", &cantidadFilosofos);
+	pthread_t filosofos[cantidadFilosofos];
 	int ids[5];
 	int i;
 
-	for(i = 0; i < 5; i++){
+	for(i = 0; i < cantidadFilosofos; i++){
 		pthread_mutex_init(&tenedores[i], NULL);
 	}
-	for(i = 0; i < 5; i++){
+	for(i = 0; i < cantidadFilosofos; i++){
 		ids[i] = i+1;
 		pthread_create(&filosofos[i],NULL, &filosofo, &ids[i]);
 	}
-	for(i = 0; i < 5; i++){
+	for(i = 0; i < cantidadFilosofos; i++){
 		pthread_join(filosofos[i],NULL);
 	}
 
@@ -40,8 +42,8 @@ void dejarTenedores(int p1,int p2){
 
 
 void comer(int arg){
-	int tenedor1 = arg-2;   
-	int tenedor2 = arg-1;	
+	int tenedor1 = arg-1;   
+	int tenedor2 = arg-2;	
 	
 	if(tenedor1 == -1){
 		tenedor1 = 4;
