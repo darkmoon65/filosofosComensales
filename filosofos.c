@@ -42,13 +42,20 @@ void dejarTenedores(int p1,int p2){
 	pthread_mutex_unlock(&tenedores[p2]);
 }
 
+void pensar(int num){
+	printf("Filosofo %d esta pensando \n", num );
+	int random = rand() % 10;  // generamos un numero random para dormir al thread
+	sleep(random);
+}
 
 void comer(int arg){
 	int tenedor1 = arg-2;   
 	int tenedor2 = arg-1;	
 	
+	//evitamos el deadlock accediendo en orden a los tenedores, inclusive el ultimo termino
 	if(tenedor1 == -1){
-		tenedor1 = 4;
+		tenedor1 = tenedor2;
+		tenedor2 = cantidadFilosofos-1;
 	}
 	agarrarTenedor(arg, tenedor1);
 	agarrarTenedor(arg, tenedor2);
@@ -71,7 +78,8 @@ void comer(int arg){
 //metodo para cada filosofo
 void *filosofo (void *arg){
 	int arg2 = *((int *)arg);
-	for ( int i = 0; i < 5 ; i++){ 
+	while ( variableComida > 0){ //mientras haya comida se ejecutara el programa
+		pensar(arg2);
 		comer(arg2);
 	}
 	return NULL;
