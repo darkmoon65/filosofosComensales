@@ -6,6 +6,8 @@
 void *filosofo (void *arg);
 
 int cantidadFilosofos;
+int variableComida = 5000;
+int vecesRestaurarComida = 2;
 pthread_mutex_t tenedores[];
 
 
@@ -42,8 +44,8 @@ void dejarTenedores(int p1,int p2){
 
 
 void comer(int arg){
-	int tenedor1 = arg-1;   
-	int tenedor2 = arg-2;	
+	int tenedor1 = arg-2;   
+	int tenedor2 = arg-1;	
 	
 	if(tenedor1 == -1){
 		tenedor1 = 4;
@@ -53,8 +55,13 @@ void comer(int arg){
 
 	printf("Filosofo %d esta comiendo \n",arg);
 
+	if(variableComida == 0 && vecesRestaurarComida > 0){
+		variableComida = 5000;
+		printf("-----------------Se restauro la comida --------------\n");
+	}
+	printf("Comida restante: %d\n",variableComida);
 	dejarTenedores(tenedor1, tenedor2);
-
+	
 }
 
 //metodo para cada filosofo
