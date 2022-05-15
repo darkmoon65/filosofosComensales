@@ -3,8 +3,8 @@
 #include<stdlib.h>
 #include<unistd.h>
 
+// declaracion de variables globales
 void *filosofo (void *arg);
-
 int cantidadFilosofos;
 int variableComida = 5000;
 int vecesRestaurarComida = 2;
@@ -13,6 +13,7 @@ int estomagos[];
 int derrocheEnergia = 0;
 int comido = 0;
 
+//funcion principal main
 int main(void){ 
 	printf("Ingrese la cantidad de filosofos: ");
 	scanf("%d", &cantidadFilosofos);
@@ -33,17 +34,17 @@ int main(void){
 
 	return 0;
 }
-
+//funcion agarrarTenedor recibe el numero del filosofo y el numero del tenedor
 void agarrarTenedor(int f, int p){
 	pthread_mutex_lock(&tenedores[p]);
 	printf("Filosofo %d agarro tenedor %d \n", f,p);
 }
-
+//funcion dejar tenedores recibe los numeros de los tenedores a soltar
 void dejarTenedores(int p1,int p2){
 	pthread_mutex_unlock(&tenedores[p1]);
 	pthread_mutex_unlock(&tenedores[p2]);
 }
-
+//funcion pensar recibe el numero del filosofo 
 void pensar(int num){
 	printf("Filosofo %d esta pensando \n", num );
 	estomagos[num] -= 10;
@@ -59,17 +60,19 @@ void comer(int arg){
 	
 	//evitamos el deadlock accediendo en orden a los tenedores, inclusive el ultimo termino
 	if(tenedor1 == -1){
-		tenedor1 = tenedor2;
-		tenedor2 = cantidadFilosofos-1;
+		tenedor1 = tenedor2;	 //calculamos el primer tenedor
+		tenedor2 = cantidadFilosofos-1;		//calculamos el segundo tenedor
 	}
 	agarrarTenedor(arg, tenedor1);
 	agarrarTenedor(arg, tenedor2);
 
+	//seccion critica
 	printf("Filosofo %d esta comiendo \n",arg);
 	variableComida = variableComida-100;
 	estomagos[arg] += 100;
 	comido += 100;
 
+	//comprobamos si se tiene que restaurar la comida
 	if(variableComida == 0 && vecesRestaurarComida > 0){
 		printf("-----Total comida en estomagos %d -------- \n", comido);
 		printf("------Total energia gastada %d ------- \n", derrocheEnergia);
@@ -80,6 +83,7 @@ void comer(int arg){
 
 	printf("Estomago de filosofo %d  esta con %d \n",arg, estomagos[arg]);
 	printf("Comida restante: %d\n",variableComida);
+	//dejamos los tenedores y con ello finaliza la seccion critica
 	dejarTenedores(tenedor1, tenedor2);
 	
 }
